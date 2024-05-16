@@ -1,4 +1,5 @@
-import { headers } from "next/headers";
+import { headers } from 'next/headers';
+import { fetchWeather } from './fetch';
 
 const weatherEmojis = {
   Thunderstorm: '⛈️',
@@ -10,27 +11,10 @@ const weatherEmojis = {
   Clouds: '☁️',
 };
 
-const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
-
-type Weather = {
-  name: string;
-  weather: Array<{
-    main:
-      | 'Thunderstorm'
-      | 'Drizzle'
-      | 'Rain'
-      | 'Snow'
-      | 'Atmosphere'
-      | 'Clear'
-      | 'Clouds';
-  }>;
-  main: {
-    temp: number;
-  };
-};
+const kelvinToCelsius = (kelvin: number) => Math.round(kelvin - 273.15);
 
 export default async function Home() {
-  const header = headers()
+  const header = headers();
   const latitude = header.get('x-latitude') || '37.129';
   const longitude = header.get('x-longitude') || '127.123';
 
@@ -39,14 +23,7 @@ export default async function Home() {
   searchParams.set('lon', longitude.toString());
   searchParams.set('appid', process.env.OPENWEATHERMAP_API_KEY ?? '');
 
-  const weather: Weather = await fetch(
-    `${baseUrl}?${searchParams.toString()}`,
-    {
-      cache: 'no-store',
-    }
-  ).then((res) => res.json());
-
-  const kelvinToCelsius = (kelvin: number) => Math.round(kelvin - 273.15);
+  const weather = await fetchWeather(searchParams.toString());
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-3">
