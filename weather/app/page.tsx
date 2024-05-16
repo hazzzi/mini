@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 const weatherEmojis = {
   Thunderstorm: '⛈️',
   Drizzle: '🌧️',
@@ -28,8 +30,9 @@ type Weather = {
 };
 
 export default async function Home() {
-  const latitude = 37.1289771;
-  const longitude = -84.0832646;
+  const header = headers()
+  const latitude = header.get('x-latitude') || '37.129';
+  const longitude = header.get('x-longitude') || '127.123';
 
   const searchParams = new URLSearchParams();
   searchParams.set('lat', latitude.toString());
