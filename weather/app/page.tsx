@@ -27,7 +27,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-3">
-      <p className="text-5xl">{weatherEmojis[weather.weather[0].main]}</p>
+      <p className="text-5xl">{weatherEmojis[weather.weather?.[0].main]}</p>
       <h1 className="flex font-bold">
         <span className="text-8xl">{kelvinToCelsius(weather.main.temp)}</span>
         <span className="text-xl">°C</span>
